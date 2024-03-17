@@ -1,20 +1,19 @@
-console.log("welcome to tic tac toe");
-audioturn = new Audio("ting.mp3")
-let turn  = "X"
+console.log("Welcome to tic tac toe");
+
+const audioturn = new Audio("ting.mp3");
+let turn = "X";
 let gameover =  false;
+let boxes = document.getElementsByClassName("box");
 
-//funxtion to change the turn
+// Function to change the turn
+const changeTurn = () => {
+    return turn === "X" ? "O" : "X";
+};
 
-
-const changeTurn = () =>{
-    return turn === "X"?"0": "X"
-
-}
-//function to chack win
-const checkWin = ()=>{
+// Function to check win
+const checkWin = () => {
     let boxtext = document.getElementsByClassName('boxtext');
     let wins = [
-        
         [0,1,2],
         [3,4,5],
         [6,7,8],
@@ -22,56 +21,42 @@ const checkWin = ()=>{
         [1,4,7],
         [2,5,8],
         [0,4,8],
-        [2,4,8]
+        [2,4,6]
     ];
-    wins.forEach(e =>{
-        if (
-            boxtext[e[0]].innerText === boxtext[e[1]].innerText &&
-            boxtext[e[1]].innerText === boxtext[e[2]].innerText &&
-            boxtext[e[0]].innerText !== ""
-        )
-        
-        { 
-        document.querySelector('.info').innerText = turn  + "Won";
-        gameover = true;
-        document.querySelector('.imgbox').getElementsByTagName('img')[0].style.width = "200px"
+    for (let win of wins) {
+        let [a, b, c] = win;
+        if (boxtext[a].innerText !== "" && boxtext[a].innerText === boxtext[b].innerText && boxtext[a].innerText === boxtext[c].innerText) { 
+            document.querySelector('.info').innerText = turn + " Won";
+            gameover = true;
+            document.querySelector('.imgbox').getElementsByTagName('img')[0].style.width = "200px";
+            break;
         }
-    })
+    }
+};
 
-}
-//game logic
-let boxes  = document.getElementsByClassName("box");
-Array.from(boxes).forEach(element => {  
-    let  boxtext = element.querySelector('.boxtext');
-    element.addEventListener('click', () =>{
-        if(boxtext.innerText == ''){
+// Game logic
+for (let box of boxes) {  
+    let boxtext = box.querySelector('.boxtext');
+    box.addEventListener('click', () => {
+        if (boxtext.innerText === '' && !gameover) {
             boxtext.innerText = turn;
-           turn =  changeTurn();
+            turn = changeTurn();
             audioturn.play();
             checkWin();
-            if(!gameover){
-                document.getElementsByClassName("info")[0].innerText = "Turn for "+ turn;
+            if (!gameover) {
+                document.querySelector('.info').innerText = "Turn for " + turn;
             }
         }
-    })
-
-})     
-
-// add onclick listner to reset the game
-// ... (existing code)
-
-// add onclick listener to reset the game
-reset.addEventListener('click', () => {
-    Array.from(boxes).forEach(element => {
-        element.querySelector('.boxtext').innerText = "";
     });
-    turn = "X"; // Corrected the typo here
+}
+
+// Reset button click listener
+document.getElementById('reset').addEventListener('click', () => {
+    for (let box of boxes) {
+        box.querySelector('.boxtext').innerText = "";
+    }
+    turn = "X";
     gameover = false;
-    document.getElementsByClassName("info")[0].innerText = "Turn for " + turn;
+    document.querySelector('.info').innerText = "Turn for " + turn;
     document.querySelector('.imgbox').getElementsByTagName('img')[0].style.width = "0px";
 });
-
-
-
-
-
